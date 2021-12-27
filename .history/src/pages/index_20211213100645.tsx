@@ -5,9 +5,9 @@ import Image from "next/image";
 import { SubscribeButton } from "../components/SubscribeButton";
 import styles from "./home.module.scss";
 
-// Client-side (comentários)
+// Client-side
 // Server-side
-// Static site generation (conteúdo)
+// Static site generation
 interface HomeProps {
   product: {
     priceId: string;

@@ -1,13 +1,10 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { stripe } from "../service/stripe";
 import Head from "next/head";
 import Image from "next/image";
 import { SubscribeButton } from "../components/SubscribeButton";
 import styles from "./home.module.scss";
 
-// Client-side (comentários)
-// Server-side
-// Static site generation (conteúdo)
 interface HomeProps {
   product: {
     priceId: string;
@@ -31,7 +28,7 @@ export default function Home({ product }: HomeProps) {
             Get access to all the publications <br />
             <span>for {product.amount} month</span>
           </p>
-          <SubscribeButton priceId={product.priceId} />
+          <SubscribeButton />
         </section>
 
         <Image
@@ -45,8 +42,11 @@ export default function Home({ product }: HomeProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const price = await stripe.prices.retrieve("price_1K0tQ2DZdsaYIRJNd5DL9oFr");
+export const getServerSideProps: GetServerSideProps = async () => {
+  const price = await stripe.prices.retrieve("price_1K0tQ2DZdsaYIRJNd5DL9oFr", {
+    expand: ["product"],
+  });
+
   const product = {
     priceId: price.id,
     amount: new Intl.NumberFormat("en-US", {
@@ -58,6 +58,5 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       product,
     },
-    revalidate: 60 * 60 * 24, //24 horas
   };
 };
